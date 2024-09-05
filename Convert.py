@@ -2,12 +2,11 @@ import os
 import sys
 from typing import Optional
 from subprocess import Popen
+
 from pathlib import Path
-
-
 current_dir = Path(__file__).absolute().parent.as_posix()
+sys.path.insert(0, f"{current_dir}")
 os.chdir(current_dir)
-sys.path.insert(0, f"{current_dir}/VITS2_finetuning")
 
 
 python_exec = sys.executable or "python"
