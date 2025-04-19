@@ -2,9 +2,8 @@ import os
 import sys
 from typing import Optional
 from subprocess import Popen
+
 from pathlib import Path
-
-
 current_dir = Path(__file__).absolute().parent.as_posix()
 os.chdir(current_dir)
 sys.path.insert(0, f"{current_dir}/VITS2_finetuning")
@@ -16,7 +15,7 @@ p_preprocess = None
 p_train = None
 
 
-def Train(
+def train(
     FileList_Path_Training: str = 'train.txt',
     FileList_Path_Validation: str = 'val.txt',
     Set_Epochs: int = 10000,

@@ -1,22 +1,21 @@
 import os, sys, shutil
 from typing import Union, Optional
 from glob import glob
-from pathlib import Path
 
 from pathlib import Path
 current_dir = Path(__file__).absolute().parent.as_posix()
 sys.path.insert(0, f"{current_dir}")
 os.chdir(current_dir)
 
-from Dataset_Creator.Creating_Directories import create_directories
-from Dataset_Creator.Convert_SRT_to_CSV import change_encoding, convert_srt_to_csv
-from Dataset_Creator.Change_Sample_Rate import preprocess_audio
-from Dataset_Creator.Split_Audio import split_files
-from Dataset_Creator.Create_DS_CSV import create_DS_csv
-from Dataset_Creator.Merge_CSV import merge_csv
-from Dataset_Creator.Merge_Transcripts_and_Files import merge_transcripts_and_wav_files
-from Dataset_Creator.Clean import clean_unwanted_characters
-from Dataset_Creator.Create_Dataset_Loading_Script import Transcript_Writer
+from Dataset_Creator.creatingDirectories import create_directories
+from Dataset_Creator.convertSRTToCSV import change_encoding, convert_srt_to_csv
+from Dataset_Creator.changeSampleRate import preprocess_audio
+from Dataset_Creator.splitAudio import split_files
+from Dataset_Creator.createDatasetCSV import create_DS_csv
+from Dataset_Creator.mergeCSV import merge_csv
+from Dataset_Creator.mergeTranscriptsAndFiles import merge_transcripts_and_wav_files
+from Dataset_Creator.clean import clean_unwanted_characters
+from Dataset_Creator.createDatasetLoadingScript import Transcript_Writer
 
 
 class Dataset_Creating:
@@ -85,7 +84,7 @@ class Dataset_Creating:
         self.FileList_Path_Training = Path(self.WAV_Dir_Split).joinpath(FileList_Name_Training).as_posix() + ".txt"
         self.FileList_Path_Validation = Path(self.WAV_Dir_Split).joinpath(FileList_Name_Validation).as_posix() + ".txt"
 
-    def CallingFunctions(self):
+    def run(self):
         SRT_Counter = len(glob(os.path.join(self.SRT_Dir, '*.srt')))
 
         if SRT_Counter == 0:
