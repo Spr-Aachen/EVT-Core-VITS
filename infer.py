@@ -14,7 +14,7 @@ python_exec = sys.executable or "python"
 p_infer = None
 
 
-def convert(
+def infer(
     Config_Path_Load: str = ...,
     Model_Path_Load: str = ...,
     Text: str = '请输入语句',
