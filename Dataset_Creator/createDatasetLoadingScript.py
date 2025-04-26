@@ -6,7 +6,7 @@ import shutil
 from pathlib import Path
 
 
-def Transcript_Writer(
+def writeTranscript(
     AudioSpeakers,
     DataFormat,
     CSV_Path,
@@ -38,7 +38,7 @@ def Transcript_Writer(
         Line_Lang = re.split(r'[\[\]]', Line_LanguageText)[1]
         LangList.append(Line_Lang) if Line_Lang not in LangList else None
 
-    def UpdateDataLines(DataLines, Text_Path):
+    def _updateDataLines(DataLines, Text_Path):
         for Index, Line in enumerate(DataLines):
             Line_Path = Line.split('|', maxsplit = 1)[0]
             Audio = Path(Line_Path.rsplit('_', maxsplit = 1)[0] + Path(Line_Path).suffix).as_posix()
@@ -56,7 +56,7 @@ def Transcript_Writer(
             DataLines[Index] = Line
         return DataLines
 
-    def UpdateAuxiliaryDataLines(AuxiliaryDataLines, Text_Path):
+    def _updateAuxiliaryDataLines(AuxiliaryDataLines, Text_Path):
         print("Writing AuxiliaryData paths...")
         AuxiliaryDataLines_New = []
         for AuxiliaryDataLine in AuxiliaryDataLines:
@@ -82,8 +82,8 @@ def Transcript_Writer(
     TrainSize = int(len(DataLines) * TrainRatio)
     DataLines_Train = DataLines[:TrainSize]
     DataLines_Val = DataLines[TrainSize:]
-    DataLines_Train = UpdateDataLines(DataLines_Train, Text_Path_Training)
-    DataLines_Val = UpdateDataLines(DataLines_Val, Text_Path_Validation)
+    DataLines_Train = _updateDataLines(DataLines_Train, Text_Path_Training)
+    DataLines_Val = _updateDataLines(DataLines_Val, Text_Path_Validation)
     if AuxiliaryData_Path is not None:
         with open(file = AuxiliaryData_Path, mode = 'r', encoding = 'utf-8') as AuxiliaryData:
             AuxiliaryDataLines = AuxiliaryData.readlines()
@@ -91,8 +91,8 @@ def Transcript_Writer(
         TrainSize = int(len(AuxiliaryDataLines) * TrainRatio)
         AuxiliaryDataLines_Train = AuxiliaryDataLines[:TrainSize]
         AuxiliaryDataLines_Val = AuxiliaryDataLines[TrainSize:]
-        AuxiliaryDataLines_Train = UpdateAuxiliaryDataLines(AuxiliaryDataLines_Train, Text_Path_Training)
-        AuxiliaryDataLines_Val = UpdateAuxiliaryDataLines(AuxiliaryDataLines_Val, Text_Path_Validation)
+        AuxiliaryDataLines_Train = _updateAuxiliaryDataLines(AuxiliaryDataLines_Train, Text_Path_Training)
+        AuxiliaryDataLines_Val = _updateAuxiliaryDataLines(AuxiliaryDataLines_Val, Text_Path_Validation)
         ReplicateTimes = len(AuxiliaryDataLines_Train) // len(DataLines_Train) if len(AuxiliaryDataLines_Train) > len(DataLines_Train) else 1
         DataLines_Train = DataLines_Train * ReplicateTimes + AuxiliaryDataLines_Train
         DataLines_Val = DataLines_Val * ReplicateTimes + AuxiliaryDataLines_Val
@@ -102,12 +102,12 @@ def Transcript_Writer(
 
     if len(DataLines_Train) > len(DataLines_Val) > 0:
         print("Writing VITS dataset paths...")
-        def WriteDataLines(Text_Path, Lines):
+        def _writeDataLines(Text_Path, Lines):
             os.makedirs(os.path.dirname(Text_Path), exist_ok = True)
             with open(file = Text_Path, mode = 'w', encoding = 'utf-8') as File_New:
                 File_New.writelines(Lines)
-        WriteDataLines(Text_Path_Training, DataLines_Train)
-        WriteDataLines(Text_Path_Validation, DataLines_Val)
+        _writeDataLines(Text_Path_Training, DataLines_Train)
+        _writeDataLines(Text_Path_Validation, DataLines_Val)
 
     else:
         raise Exception(f"Lack of data!")
